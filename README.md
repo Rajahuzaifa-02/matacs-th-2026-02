@@ -1,6 +1,6 @@
 # AI Proposal Triage: Design Submission
 
-- **Name:** Muhammad Faizan
+- **Name:** Raja Muhammad Huzaifa
 - **Reference:** MATACS-TH-2026-02
 - **Role:** Associate Software Developer
 - **Time actually spent:** _TODO: your real time, e.g. "about 75 minutes, plus about 30 minutes on the optional prototype"_
@@ -19,9 +19,9 @@
 
 ## How I used AI tools
 
-_TODO: write this in your own words (2–3 sentences), saying what you used AI for and what you checked yourself._
+I used Claude (Anthropic) throughout this assessment. Based on my instructions, it drafted the process design, the extraction prompt, the scoring rules, the write-up, the diagram and the optional prototype. I then reviewed everything, checked each score in `ranking.json` against the scoring table, and ran the prototype to confirm it reproduces the same ranking.
 
-I used Claude to help draft the design, the extraction prompt, the write-up and the prototype code, and I checked the scoring maths by running it. **Where I disagreed with or corrected the AI:** _TODO: one real change you made after reviewing its output, and why._
+**Where I disagreed with the AI:** its first diagram was a static image generated from code, which I couldn't edit myself if a requirement changed. I had it rebuilt in draw.io and saved as a PNG that still opens as an editable diagram. I also found its first write-up too polished and formal for a non-developer reader, so I had it rewritten in plainer, first-person language.
 
 ## The design in short
 
