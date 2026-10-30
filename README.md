@@ -3,7 +3,7 @@
 - **Name:** Raja Muhammad Huzaifa
 - **Reference:** MATACS-TH-2026-02
 - **Role:** Associate Software Developer
-- **Time actually spent:** _TODO: your real time, e.g. "about 75 minutes, plus about 30 minutes on the optional prototype"_
+- **Time actually spent:** 80 mins
 
 ## Files
 
@@ -34,9 +34,9 @@
 
 ## How I used AI tools
 
-I used Claude (Anthropic) throughout this assessment. Based on my instructions, it drafted the process design, the extraction prompt, the scoring rules, the write-up, the diagram and the optional prototype. I then reviewed everything, checked each score in `ranking.json` against the scoring table, and ran the prototype to confirm it reproduces the same ranking.
+I used Claude (Anthropic) throughout this assessment. Based on my instructions, it drafted the process design, extraction prompt, scoring rules, write-up, diagram, and optional prototype. I then reviewed everything, checked each score in `ranking.json` against the scoring table, and ran the prototype to confirm it reproduces the same ranking.
 
-**Where I disagreed with the AI:** its first diagram was a static image generated from code, which I couldn't edit myself if a requirement changed. I had it rebuilt in draw.io and saved as a PNG that still opens as an editable diagram. I also found its first write-up too polished and formal for a non-developer reader, so I had it rewritten in plainer, first-person language.
+**Where I disagreed with the AI:** its first diagram was a static image generated from code, which I couldn't edit myself if a requirement changed. I rebuilt it in draw.io and saved it as a PNG that still opens as an editable diagram. I also found its first write-up too polished and formal for a non-developer reader, so I had it rewritten in plainer, first-person language.
 
 ## The design in short
 
@@ -90,7 +90,7 @@ The PNG has the draw.io diagram saved inside it, so it can be edited rather than
 You need Python 3.10 or newer.
 
 ```bash
-# 1. No API key needed: runs the rules on the expected extraction and reproduces ranking.json
+# 1. No API key needed: runs the rules on the expected extraction and reproduces ranking.json. 
 python prototype/triage.py --offline
 
 # 2. Tests: same output every run, fake quotes withheld, injection caught, weight changes re-score
