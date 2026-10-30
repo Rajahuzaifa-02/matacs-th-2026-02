@@ -17,6 +17,21 @@
 | [prototype/criteria.json](prototype/criteria.json) | The admin's criteria for this category, stored as data (what the admin screens would save) |
 | [.env.example](.env.example) | Settings for the prototype. No real keys are committed |
 
+## Requirements checklist
+
+| Requirement | Where it is covered | Status |
+|---|---|---|
+| Public repository named `matacs-th-2026-02` | This repository | Done |
+| README with full name, reference, time spent, AI use and links to every file | This file | Done |
+| Process-flow diagram from upload to ranked output, showing AI steps, rule steps and human checkpoints (one PNG, JPG or PDF) | [diagram/process-flow.png](diagram/process-flow.png) | Done |
+| Answers to the five questions, at most 1,000 words | [WRITEUP.md](WRITEUP.md) (Q1 to Q5, about 940 words) | Done |
+| AI prompt(s) for extraction and/or scoring, exactly as sent | [PROMPTS.md](PROMPTS.md) | Done |
+| Expected ranking of A–E with `ranked` / `flagged` / `ineligible`, rank `null` when not ranked, score 0–100 or `null` | [ranking.json](ranking.json) | Done |
+| Optional: small script that runs the prompt on the samples | [prototype/](prototype/) | Done |
+| No API keys committed; `.env.example` included | [.env.example](.env.example), `.env` is git-ignored | Done |
+| Only the fictional samples used; brief and proposal text not copied; proposals referred to by letter | Whole repository | Done |
+| Unclear points: assumption stated in the write-up | [WRITEUP.md, Assumptions](WRITEUP.md#assumptions) | Done |
+
 ## How I used AI tools
 
 I used Claude (Anthropic) throughout this assessment. Based on my instructions, it drafted the process design, the extraction prompt, the scoring rules, the write-up, the diagram and the optional prototype. I then reviewed everything, checked each score in `ranking.json` against the scoring table, and ran the prototype to confirm it reproduces the same ranking.
