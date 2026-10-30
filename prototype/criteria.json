@@ -1,0 +1,198 @@
+{
+  "category_id": "commercial-solar-installation",
+  "category_name": "Commercial Solar Installation",
+  "criteria_version": 1,
+  "edited_by": "admin@example.com",
+  "edited_at": "2026-10-28T09:00:00Z",
+  "project": {
+    "description": "150 kW rooftop system on a warehouse, Windsor, Ontario",
+    "budget_ceiling_cad": 260000,
+    "max_completion_weeks": 16,
+    "experience_window_years": 5,
+    "evaluation_year": 2026
+  },
+  "fields": {
+    "bidder_holds_on_ec_licence": {
+      "label": "bidder's own Ontario licence",
+      "type": "boolean",
+      "description": "true if the proposal states that the bidding company itself holds an Ontario electrical contractor licence. false if it says the electrical work relies on a subcontractor's or partner's licence, or that the licence holder is to be confirmed later."
+    },
+    "licence_number": {
+      "label": "licence number",
+      "type": "string",
+      "description": "The Ontario electrical contractor licence number (ECRA/ESA) exactly as written."
+    },
+    "wsib_clearance": {
+      "label": "WSIB clearance",
+      "type": "boolean",
+      "description": "true if the proposal states the bidder has current WSIB clearance."
+    },
+    "liability_insurance_cad": {
+      "label": "liability insurance",
+      "type": "number",
+      "description": "Amount of general liability insurance the bidder states it carries, in CAD (e.g. 5000000 for $5M)."
+    },
+    "qualifying_installs_count": {
+      "label": "qualifying installs",
+      "type": "integer",
+      "description": "Number of completed commercial solar installations of 100 kW or more that the proposal claims."
+    },
+    "experience_since_year": {
+      "label": "experience start year",
+      "type": "integer",
+      "description": "If the count above is given as 'since <year>', that year. Otherwise null."
+    },
+    "experience_within_years": {
+      "label": "experience period",
+      "type": "integer",
+      "description": "If the count above is given as 'in the past/last N years', that N. Otherwise null."
+    },
+    "total_price_cad": {
+      "label": "total price",
+      "type": "number",
+      "description": "Total all-in price for the project in CAD."
+    },
+    "completion_weeks": {
+      "label": "completion time",
+      "type": "number",
+      "description": "Committed time to complete the installation, in weeks from award."
+    },
+    "panel_warranty_years": {
+      "label": "panel warranty",
+      "type": "number",
+      "description": "Length of the panel (manufacturer) warranty in years."
+    },
+    "workmanship_warranty_years": {
+      "label": "workmanship warranty",
+      "type": "number",
+      "description": "Length of the bidder's workmanship warranty in years."
+    },
+    "named_project_lead": {
+      "label": "named project lead",
+      "type": "boolean",
+      "description": "true if a dedicated project lead or project manager is committed and named (or explicitly described as named). false if only 'to be assigned' or a generic coordinator."
+    },
+    "crew_described": {
+      "label": "crew described",
+      "type": "boolean",
+      "description": "true if the delivery crew is described (for example its size or certification)."
+    },
+    "safety_plan": {
+      "label": "safety plan",
+      "type": "boolean",
+      "description": "true if the proposal includes or commits to a site safety plan."
+    },
+    "performance_monitoring": {
+      "label": "performance monitoring",
+      "type": "boolean",
+      "description": "true if the proposal includes monitoring of the solar system's performance after installation. Construction progress reports alone do not count."
+    }
+  },
+  "criteria": [
+    {
+      "id": "licence",
+      "name": "Ontario electrical contractor licence",
+      "type": "mandatory",
+      "rule": {
+        "kind": "all_true",
+        "fields": [
+          "bidder_holds_on_ec_licence"
+        ],
+        "require_present": [
+          "licence_number"
+        ]
+      }
+    },
+    {
+      "id": "wsib_insurance",
+      "name": "WSIB clearance and $5M liability insurance",
+      "type": "mandatory",
+      "rule": {
+        "kind": "all_true",
+        "fields": [
+          "wsib_clearance"
+        ],
+        "min_values": {
+          "liability_insurance_cad": 5000000
+        }
+      }
+    },
+    {
+      "id": "experience",
+      "name": "Relevant experience",
+      "type": "weighted",
+      "weight": 30,
+      "rule": {
+        "kind": "linear",
+        "field": "qualifying_installs_count",
+        "zero_at": 0,
+        "full_at": 12,
+        "window_check": true
+      }
+    },
+    {
+      "id": "price",
+      "name": "Price",
+      "type": "weighted",
+      "weight": 25,
+      "rule": {
+        "kind": "linear",
+        "field": "total_price_cad",
+        "zero_at": 260000,
+        "full_at": 195000,
+        "hard_max": 260000
+      }
+    },
+    {
+      "id": "timeline",
+      "name": "Timeline",
+      "type": "weighted",
+      "weight": 15,
+      "rule": {
+        "kind": "linear",
+        "field": "completion_weeks",
+        "zero_at": 16,
+        "full_at": 8,
+        "hard_max": 16
+      }
+    },
+    {
+      "id": "warranty",
+      "name": "Warranty",
+      "type": "weighted",
+      "weight": 15,
+      "rule": {
+        "kind": "average",
+        "parts": [
+          {
+            "kind": "linear",
+            "field": "panel_warranty_years",
+            "zero_at": 10,
+            "full_at": 25
+          },
+          {
+            "kind": "linear",
+            "field": "workmanship_warranty_years",
+            "zero_at": 0,
+            "full_at": 15
+          }
+        ]
+      }
+    },
+    {
+      "id": "team",
+      "name": "Team and approach",
+      "type": "weighted",
+      "weight": 15,
+      "rule": {
+        "kind": "checklist",
+        "fields": [
+          "named_project_lead",
+          "crew_described",
+          "safety_plan",
+          "performance_monitoring"
+        ]
+      }
+    }
+  ]
+}

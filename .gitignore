@@ -1,0 +1,6 @@
+.env
+samples/
+prototype/out/
+prototype/.cache/
+__pycache__/
+.pytest_cache/
