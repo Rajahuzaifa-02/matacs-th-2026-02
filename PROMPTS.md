@@ -1,22 +1,22 @@
 # Prompts
 
-The design uses **one AI prompt: extraction.** The AI reads a proposal and reports what it says, with exact quotes. It does **not** score, rank or write the reasons. Scoring, ranking and reasons are plain code driven by the admin's criteria (see [WRITEUP.md](WRITEUP.md), Q1).
+My design uses **one AI prompt, for extraction.** The AI reads a proposal and reports what it says, with exact quotes. It doesn't score, rank or write the reasons; those are plain code driven by the admin's criteria (see [WRITEUP.md](WRITEUP.md), Q1).
 
-The prompt is sent once per proposal. The parts in `{curly braces}` are filled in by code from the admin's criteria set, so when the admin changes criteria the prompt changes with them and nothing is hard-coded.
+The prompt is sent once per proposal. Code fills in the parts in `{curly braces}` from the admin's criteria, so when the admin changes the criteria, the prompt changes with them. Nothing about the category is hard-coded.
 
-The prototype reads the text between the `BEGIN`/`END` markers below, so what is shown here is exactly what is sent.
+The prototype reads the text between the `BEGIN` and `END` markers below, so what you see here is exactly what gets sent.
 
 ## Call settings
 
 | Setting | Value | Why |
 |---|---|---|
-| Model | A pinned, dated model version (never an alias like "latest") | Same model every run; a model change is a logged, deliberate event |
-| Temperature | 0 | Least variation between runs |
-| Output | Forced tool call `record_extraction` with a JSON schema built from the criteria fields | Output is always valid, typed JSON; no free text to parse |
-| Max tokens | 2,000 | One proposal's fields fit easily; caps cost |
-| Caching | Result stored against (file hash, prompt version, model, criteria version) | The same file is never re-extracted, so re-ranking gives the same answer and costs nothing |
+| Model | A pinned, dated model version, never an alias like "latest" | The same model every run; switching models is a deliberate, logged change |
+| Temperature | 0 | As little variation between runs as possible |
+| Output | A forced tool call, `record_extraction`, with a JSON schema built from the criteria fields | The answer is always valid, typed JSON, with no free text to parse |
+| Max tokens | 2,000 | Plenty for one proposal's fields, and it caps the cost |
+| Caching | Each result is saved against the file hash, prompt version, model and criteria version | The same file is never extracted twice, so re-ranking gives the same answer and costs nothing |
 
-Before sending, code removes any `<proposal` or `</proposal>` text from the proposal so a document cannot close the data block early.
+Before sending, the code strips any `<proposal` or `</proposal>` text out of the proposal, so a document can't close the data block early.
 
 ## Prompt version: extraction-v1
 
@@ -71,7 +71,7 @@ Call record_extraction with one entry for every field above, plus any embedded_i
 
 ### Tool schema (`record_extraction`)
 
-Built by code from the criteria fields. Shown here for the solar category, with one field written out; every field follows the same shape.
+Code builds this from the criteria fields. Here it is for the solar category with one field written out; every other field has the same shape.
 
 ```json
 {
@@ -114,13 +114,15 @@ Built by code from the criteria fields. Shown here for the solar category, with 
 }
 ```
 
-## What code does with the answer (not AI)
+## What the code does with the answer (no AI)
 
-1. **Quote check.** Every `evidence` string must appear in the extracted proposal text (after normalising spaces and quote marks). A value whose quote is not found is treated as `unclear` and flagged. This catches made-up facts.
-2. **Type and range check.** For example, a price must be a positive number, warranty years must be 0–50.
-3. **Independent injection screen.** A simple pattern check (phrases like "automated review", "rank it first", "full marks", "ignore previous", "pre-approved") runs on the raw text as well. Either the AI or the pattern check can raise the flag, so one missing it is not enough to let it through.
-4. **Rules and scores** from the admin's criteria, then ranking and template-written reasons.
+1. **Quote check.** Every `evidence` string has to appear in the proposal text (after evening out spaces and quote marks). If a quote isn't found, the value is treated as `unclear` and flagged. This is what catches made-up facts.
+2. **Type and range check.** For example, a price has to be a positive number and warranty years have to be between 0 and 50.
+3. **A separate injection check.** A simple pattern check also runs on the raw text, looking for phrases like "automated review", "rank it first", "full marks", "ignore previous" and "pre-approved". Either the AI or the pattern check can raise the flag, so it only gets through if both miss it.
+4. **Rules and scores** from the admin's criteria, then the ranking and the template reasons.
 
 ## Why there is no scoring prompt
 
-Asking an AI for a 0–100 score gives numbers that drift between runs and cannot be traced back to a rule. Once the facts are extracted, each criterion here is a simple formula the admin can read and set, so code is cheaper, exactly repeatable and easy to explain. If an admin later adds a criterion that really needs judgement (for example "quality of the roof-safety method"), the design would add a second prompt that grades against an admin-written rubric of 3–5 levels, requires a quote for the chosen level, runs twice, and flags any disagreement for a human.
+If you ask an AI for a 0–100 score, the number can drift between runs and you can't trace it back to a rule. Once the facts are out, each criterion here is a simple formula the admin can read and set, so doing it in code is cheaper, exactly repeatable and easy to explain.
+
+If an admin later adds a criterion that really does need judgement (say, "quality of the roof-safety method"), I'd add a second prompt. It would grade against a 3–5 level rubric the admin writes, need a quote for the level it picks, run twice, and flag any disagreement for a person.

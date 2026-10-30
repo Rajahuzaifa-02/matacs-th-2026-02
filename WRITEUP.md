@@ -1,63 +1,68 @@
-# Write-up: AI Proposal Triage Design
+# Write-up
 
-**Design in one line:** AI only *reads* each proposal and reports what it says, with exact quotes. Plain code checks those quotes and applies the admin's rules to score and rank. A person reviews every flag and makes the award. See the [flow diagram](diagram/process-flow.png).
+My idea is to use AI only for what it's good at here, reading messy proposal text. It pulls facts out of each proposal and backs every fact with an exact quote. Normal code then checks the quotes, applies the admin's rules and does the scoring. A person reviews the flags and makes the award. The [flow diagram](diagram/process-flow.png) shows the steps, colour-coded by who does them.
 
 ## 1. AI vs. rules
 
-| Step | AI or rules | Why |
-|---|---|---|
-| Read PDF text, OCR fallback | Code | Standard tooling |
-| Injection screen | Code (pattern check) | Cheap and independent of the AI, so one tricked model is not enough |
-| Pull facts out of free text (price, weeks, licence holder, warranty years, team items) | **AI** | Proposals word things differently ("all-in", "since 2021", "subcontractor to be confirmed"). Reading varied language is where AI adds value |
-| Check every quote exists in the source | Code | Exact string match is fully reliable |
-| Mandatory pass/fail, budget and 16-week limits | Rules | Yes/no decisions must be exact and defensible |
-| Weighted scores, ranking, tie-break | Rules | Arithmetic the admin can read and set |
-| Reason text | Code template | Built from the scores and facts, so it can never say something the scoring did not do |
-| Award | Human | Accountability stays with a person |
+Only one step uses AI: **extraction (step 6)**. Bidders word the same thing differently ("all-in", "since 2021", "a subcontractor to be confirmed"), and turning that into clean fields is a language problem. That is where AI helps.
 
-The line sits at "understanding words vs. applying rules". AI is good at the first and unreliable at the second: asking a model for a 0–100 score gives numbers that drift and cannot be traced back to a rule.
+Everything else is plain code or rules:
+
+- reading the PDF text (with OCR if it's a scan)
+- a simple pattern check for text that tries to instruct the reviewer
+- checking that every quote the AI gives really appears in the proposal
+- the pass/fail checks (licence, WSIB and insurance) and the project limits (budget ceiling, 16 weeks)
+- scoring, ranking and the tie-break
+- writing the reason line, from a template filled with the scores and facts
+
+I drew the line at "understanding words" vs. "applying rules". Once the facts are out, each criterion is simple arithmetic the admin can read. AI-given scores could change between runs and couldn't be traced to a rule. Template reasons also can't claim something the scoring didn't do.
 
 ## 2. Consistency and explainability
 
-- **Repeatable by design, not by hope.** Extraction runs at temperature 0 on a pinned model with a fixed JSON schema, and the result is stored against the file hash, prompt version, model and criteria version. Ranking the same files again reuses that stored extraction, so the result is **identical**. Everything after extraction is deterministic code.
-- **Absolute scales.** Each criterion is scored against admin-set anchors (for example, price scores 100 at $195,000 and 0 at the $260,000 ceiling), not against the other bids. Adding or removing a proposal never changes another proposal's score.
-- **Fixed tie-break:** total, then the highest-weighted criterion (experience), then price.
-- **Explainable.** For each proposal the reviewer sees each criterion's fact, the exact quote it came from, its 0–100 score, weight and points, plus any flag. Example: Proposal A's timeline gets 50/100 because it commits to 12 weeks, halfway between the 8-week full-marks anchor and the 16-week limit.
+Yes, ranking the same proposals twice gives exactly the same result, without relying on the AI being consistent:
+
+- The extraction for each file is saved against its file hash, prompt version, model version and criteria version. Running again reuses the saved extraction instead of calling the AI again.
+- Everything after extraction is deterministic code.
+- First runs still use temperature 0, a pinned model and a fixed JSON schema.
+
+Scores are measured against fixed points the admin sets, not against the other bids. For example, price gets 100 at $195,000 and 0 at the $260,000 ceiling. Because of that, adding or removing a proposal never changes anyone else's score. Ties are broken by experience score, then by price.
+
+To see why a proposal ranked where it did, the reviewer gets one line per criterion: the fact, its quote, the 0–100 score, the weight and the points. For example, A gets 50/100 on timeline because 12 weeks is halfway between the 8-week full-marks point and the 16-week limit.
 
 ## 3. Human in the loop
 
-1. **Admin** sets criteria; every change is a new saved version.
-2. **Reviewer checkpoint (after scoring, before the list is final):**
-   - Every *flagged* proposal needs a decision: clear it, request clarification from the bidder, or mark it ineligible.
-   - Every *ineligible* proposal needs a click to confirm, because an extraction miss could wrongly exclude a bidder.
-   - The reviewer can correct any extracted value (for example, after reading the full PDF). The rules then re-score it automatically; the reviewer cannot type a score directly.
-   - A reason is required for any change.
-3. **Award** is a separate human action. The tool only ranks.
+- **Admin:** sets the criteria. Every save becomes a new version, and old versions are kept.
+- **Reviewer checkpoint (step 11):** this happens after scoring and before the list is final.
+  - Every flagged proposal needs a decision: clear it, ask the bidder to clarify, or exclude it.
+  - Every exclusion needs confirming, since a misread could wrongly knock a bidder out.
+  - The reviewer can correct an extracted value; the rules then re-score it. Nobody types in a score.
+  - Any change needs a written reason.
+- **Award:** a separate human decision. The tool only ranks.
 
-**Logged for audit (append-only):** file hash and text hash, criteria version, prompt version and model, raw AI output, quote-check results, rule results, scores, every override (who, when, old value, new value, reason), and the final decision. Any past result can be reproduced from the log.
+**What gets logged** (append-only): file and text hashes, criteria version, prompt version and model, the raw AI output, the quote-check and rule results, the scores, every override (who, when, old value, new value, reason) and the final decision. That is enough to reproduce any past result.
 
 ## 4. Changing criteria
 
-- Each run is **pinned to the criteria version it started with**. Editing criteria never silently changes finished results.
-- If an admin edits **weights or scoring anchors**, the tool re-scores from the stored extractions instantly, at no AI cost, and shows old vs. new rank side by side. The reviewer chooses which version to use, and the choice is logged.
-- If an admin **adds a criterion that needs a new fact**, only that new field is extracted, and only for the affected proposals.
-- After an award, the run is locked; changes apply to new runs only.
-- Saving is blocked unless weights total 100% and every rule refers to a defined field.
+- Each run is tied to the criteria version it started with, so editing the criteria never quietly changes results that already exist.
+- If the admin changes **weights or scoring points**, the tool re-scores from the saved extractions straight away, with no AI cost. It shows old and new ranks side by side, and the reviewer picks which version to use. That choice is logged.
+- If the admin **adds a criterion that needs a new fact**, only that new field is extracted, and only for the proposals affected.
+- After an award is made, that run is locked, and later changes only apply to new runs.
+- The admin screen won't save criteria unless the weights add up to 100% and every rule points to a real field.
 
-## 5. Risks and safeguards
+## 5. Risks
 
-| Risk | Safeguard |
+| Risk | How the design guards against it |
 |---|---|
-| **Wrong extraction** (misread number, wrong licence holder) | Exact quote required for every value; "unclear" status for vague or deferred answers; type and range checks; reviewer sees quotes and can correct |
-| **Made-up facts** | A quote not found in the source text means the value is withheld and flagged. Marketing claims ("most competitive price") are not evidence |
-| **Manipulation / prompt injection** (Proposal C) | Proposal is wrapped as data and the prompt says never to follow it; an independent pattern screen also runs; the AI cannot score, so injected text cannot award marks; proposal is **flagged**, not silently dropped, so a human decides |
-| **Missing commitments** (Proposal D gives no schedule) | Missing value scores 0 *and* raises a flag when a project limit cannot be confirmed |
-| **Bias** (polished writing, big firms, a favoured name) | AI extracts facts only and never sees other bids; scores come from fixed formulas; company names are not used in scoring; reviewers can compare score spreads across runs |
-| **Bad PDF text** (scans, tables) | OCR fallback; too little text raises a flag instead of a guess |
-| **Model change** | Pinned version; any change is logged and tested on a saved sample set first |
-| **Cost** | One AI call per proposal, cached by file hash; re-ranking and weight changes cost nothing |
-| **Over-trust** | Award is a separate human step; flagged items stay visible |
+| Wrong extraction (misread number, wrong licence holder) | An exact quote is required for every value. Vague or deferred answers are marked "unclear". Type and range checks run. The reviewer sees the quotes and can correct values |
+| Made-up facts | If a quote isn't found in the source, the value is withheld and flagged. Marketing lines like "most competitive price" don't count as evidence |
+| Manipulation (like Proposal C) | Proposal text is passed as data, and the prompt says never to follow it. A separate pattern check runs as well. The AI can't give points anyway. The proposal is flagged for a person, not silently removed |
+| Missing commitments (like D, with no schedule) | A missing value scores 0, and it raises a flag if a project limit can't be confirmed |
+| Bias (nice writing, big names) | The AI only extracts facts and never sees the other bids. Scores come from fixed formulas, and company names play no part in scoring |
+| Bad PDF text | OCR for scans; too little text is flagged, not guessed |
+| Model changes | Pinned version; any change is logged and tested on saved samples first |
+| Cost | One AI call per proposal, cached by file hash. Re-ranking and weight changes are free |
+| Over-trust | The award is a separate human step; flagged items stay visible |
 
 ## Assumptions
 
-"Last 5 years" means 2021 onward. A proposal that says its lead is "named" meets that item; the reviewer checks the name in the full PDF. How the sample set ranks is in [README.md](README.md#sample-set-result) and [ranking.json](ranking.json).
+"Last 5 years" means 2021 onward. A lead described as "named" counts as met; the reviewer checks the name in the full PDF. Sample results are in [README.md](README.md#sample-set-result) and [ranking.json](ranking.json).
