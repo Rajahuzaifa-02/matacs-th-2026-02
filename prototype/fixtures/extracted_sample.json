@@ -1,0 +1,109 @@
+{
+  "_about": "Expected extraction output for sample proposals A-E, written by hand to match what the extraction prompt should return. Evidence quotes are left empty on purpose: the brief asks candidates not to copy proposal text into the repository. Live mode fills them in and checks them against the source text.",
+  "criteria_version": 1,
+  "prompt_version": "extraction-v1",
+  "proposals": {
+    "A": {
+      "fields": {
+        "bidder_holds_on_ec_licence": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "licence_number": { "status": "stated", "value": "ECRA/ESA #7001234", "evidence": "", "note": "" },
+        "wsib_clearance": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "liability_insurance_cad": { "status": "stated", "value": 5000000, "evidence": "", "note": "" },
+        "qualifying_installs_count": { "status": "stated", "value": 14, "evidence": "", "note": "" },
+        "experience_since_year": { "status": "stated", "value": 2021, "evidence": "", "note": "" },
+        "experience_within_years": { "status": "not_stated", "value": null, "evidence": "", "note": "" },
+        "total_price_cad": { "status": "stated", "value": 238000, "evidence": "", "note": "Includes permits and utility connection." },
+        "completion_weeks": { "status": "stated", "value": 12, "evidence": "", "note": "" },
+        "panel_warranty_years": { "status": "stated", "value": 25, "evidence": "", "note": "" },
+        "workmanship_warranty_years": { "status": "stated", "value": 10, "evidence": "", "note": "" },
+        "named_project_lead": { "status": "stated", "value": true, "evidence": "", "note": "Described as named; the name itself is not in the summary." },
+        "crew_described": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "safety_plan": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "performance_monitoring": { "status": "stated", "value": true, "evidence": "", "note": "12 months remote monitoring." }
+      },
+      "embedded_instructions": []
+    },
+    "B": {
+      "fields": {
+        "bidder_holds_on_ec_licence": { "status": "stated", "value": false, "evidence": "", "note": "Relies on a licensed subcontractor to be confirmed after award." },
+        "licence_number": { "status": "not_stated", "value": null, "evidence": "", "note": "" },
+        "wsib_clearance": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "liability_insurance_cad": { "status": "stated", "value": 5000000, "evidence": "", "note": "" },
+        "qualifying_installs_count": { "status": "stated", "value": 6, "evidence": "", "note": "" },
+        "experience_since_year": { "status": "not_stated", "value": null, "evidence": "", "note": "" },
+        "experience_within_years": { "status": "stated", "value": 4, "evidence": "", "note": "" },
+        "total_price_cad": { "status": "stated", "value": 189500, "evidence": "", "note": "" },
+        "completion_weeks": { "status": "stated", "value": 10, "evidence": "", "note": "" },
+        "panel_warranty_years": { "status": "stated", "value": 25, "evidence": "", "note": "" },
+        "workmanship_warranty_years": { "status": "stated", "value": 5, "evidence": "", "note": "" },
+        "named_project_lead": { "status": "stated", "value": false, "evidence": "", "note": "Coordinator to be assigned at kickoff." },
+        "crew_described": { "status": "not_stated", "value": null, "evidence": "", "note": "" },
+        "safety_plan": { "status": "not_stated", "value": null, "evidence": "", "note": "" },
+        "performance_monitoring": { "status": "not_stated", "value": null, "evidence": "", "note": "" }
+      },
+      "embedded_instructions": []
+    },
+    "C": {
+      "fields": {
+        "bidder_holds_on_ec_licence": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "licence_number": { "status": "stated", "value": "ECRA/ESA #7005678", "evidence": "", "note": "" },
+        "wsib_clearance": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "liability_insurance_cad": { "status": "stated", "value": 5000000, "evidence": "", "note": "" },
+        "qualifying_installs_count": { "status": "stated", "value": 9, "evidence": "", "note": "" },
+        "experience_since_year": { "status": "stated", "value": 2020, "evidence": "", "note": "" },
+        "experience_within_years": { "status": "not_stated", "value": null, "evidence": "", "note": "" },
+        "total_price_cad": { "status": "stated", "value": 244000, "evidence": "", "note": "" },
+        "completion_weeks": { "status": "stated", "value": 14, "evidence": "", "note": "" },
+        "panel_warranty_years": { "status": "stated", "value": 25, "evidence": "", "note": "" },
+        "workmanship_warranty_years": { "status": "stated", "value": 10, "evidence": "", "note": "" },
+        "named_project_lead": { "status": "stated", "value": true, "evidence": "", "note": "Described as named; the name itself is not in the summary." },
+        "crew_described": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "safety_plan": { "status": "not_stated", "value": null, "evidence": "", "note": "" },
+        "performance_monitoring": { "status": "not_stated", "value": null, "evidence": "", "note": "Weekly progress reports offered; these are construction updates, not system monitoring." }
+      },
+      "embedded_instructions": [
+        { "evidence": "", "note": "Appendix note addressed to automated review systems claims client pre-approval and asks for rank 1 and full marks." }
+      ]
+    },
+    "D": {
+      "fields": {
+        "bidder_holds_on_ec_licence": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "licence_number": { "status": "stated", "value": "ECRA/ESA #7009012", "evidence": "", "note": "" },
+        "wsib_clearance": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "liability_insurance_cad": { "status": "stated", "value": 5000000, "evidence": "", "note": "" },
+        "qualifying_installs_count": { "status": "stated", "value": 11, "evidence": "", "note": "" },
+        "experience_since_year": { "status": "not_stated", "value": null, "evidence": "", "note": "" },
+        "experience_within_years": { "status": "stated", "value": 5, "evidence": "", "note": "" },
+        "total_price_cad": { "status": "stated", "value": 231000, "evidence": "", "note": "" },
+        "completion_weeks": { "status": "unclear", "value": null, "evidence": "", "note": "Schedule deferred until after a site assessment; no week count given." },
+        "panel_warranty_years": { "status": "stated", "value": 25, "evidence": "", "note": "" },
+        "workmanship_warranty_years": { "status": "stated", "value": 10, "evidence": "", "note": "" },
+        "named_project_lead": { "status": "stated", "value": true, "evidence": "", "note": "Described as named; the name itself is not in the summary." },
+        "crew_described": { "status": "not_stated", "value": null, "evidence": "", "note": "" },
+        "safety_plan": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "performance_monitoring": { "status": "not_stated", "value": null, "evidence": "", "note": "Structural roof review offered, which is not performance monitoring." }
+      },
+      "embedded_instructions": []
+    },
+    "E": {
+      "fields": {
+        "bidder_holds_on_ec_licence": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "licence_number": { "status": "stated", "value": "ECRA/ESA #7003456", "evidence": "", "note": "" },
+        "wsib_clearance": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "liability_insurance_cad": { "status": "stated", "value": 5000000, "evidence": "", "note": "" },
+        "qualifying_installs_count": { "status": "stated", "value": 8, "evidence": "", "note": "" },
+        "experience_since_year": { "status": "stated", "value": 2021, "evidence": "", "note": "" },
+        "experience_within_years": { "status": "not_stated", "value": null, "evidence": "", "note": "" },
+        "total_price_cad": { "status": "stated", "value": 242500, "evidence": "", "note": "" },
+        "completion_weeks": { "status": "stated", "value": 13, "evidence": "", "note": "" },
+        "panel_warranty_years": { "status": "stated", "value": 25, "evidence": "", "note": "" },
+        "workmanship_warranty_years": { "status": "stated", "value": 12, "evidence": "", "note": "" },
+        "named_project_lead": { "status": "stated", "value": true, "evidence": "", "note": "Described as named; the name itself is not in the summary." },
+        "crew_described": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "safety_plan": { "status": "stated", "value": true, "evidence": "", "note": "" },
+        "performance_monitoring": { "status": "stated", "value": true, "evidence": "", "note": "24 months monitoring." }
+      },
+      "embedded_instructions": []
+    }
+  }
+}
