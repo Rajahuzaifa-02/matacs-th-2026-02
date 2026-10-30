@@ -34,9 +34,7 @@
 
 ## How I used AI tools
 
-I used Claude (Anthropic) throughout this assessment. Based on my instructions, it drafted the process design, extraction prompt, scoring rules, write-up, diagram, and optional prototype. I then reviewed everything, checked each score in `ranking.json` against the scoring table, and ran the prototype to confirm it reproduces the same ranking.
-
-**Where I disagreed with the AI:** its first diagram was a static image generated from code, which I couldn't edit myself if a requirement changed. I rebuilt it in draw.io and saved it as a PNG that still opens as an editable diagram. I also found its first write-up too polished and formal for a non-developer reader, so I had it rewritten in plainer, first-person language.
+I used Claude (Anthropic) to draft the design, extraction prompt, scoring rules, write-up, diagram, and optional prototype from my instructions, then reviewed the output, checked every score in `ranking.json` against the scoring table, and ran the prototype to confirm the ranking. I **disagreed** with the AI marking Proposal B ineligible, since B is the cheapest and fastest and would outscore E on points alone, but after re-reading the mandatory criterion I accepted it: the licence must be held by the bidder, B relies on a subcontractor to be named after award, and no amount of points should outweigh a failed mandatory check. I also corrected its first diagram, a static image I couldn't edit, by having it rebuilt in draw.io as an editable PNG.
 
 ## The design in short
 
